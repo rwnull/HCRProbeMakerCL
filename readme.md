@@ -30,7 +30,6 @@ This current iteration has added features that enable users to:
     + Numpy
     + Openpyxl
     + Pandas
-  From your terminal window type the following:
   ```
   pip install Bio numpy openpyxl pandas
   ```
