@@ -25,7 +25,7 @@ initializevals = {
 
 
 def hcr(amplifier,name,seq,**kwargs):
-    sys.tracebacklimit=0
+    #sys.tracebacklimit=0
     l=initializevals
     l["ampli"] = amplifier
     l["name"] = name

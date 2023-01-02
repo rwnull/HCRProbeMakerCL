@@ -11,7 +11,8 @@ sys.tracebacklimit=0
 def maker(name,fullseq,amplifier,pause,polyAT,polyCG,txptome,numbr,cgupper,cglower,MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT,maxprobes):     
     sys.tracebacklimit=0
     if txptome == None:
-        print("notblasting")
+        #print("notblasting")
+        print()
         BlastProbes = 'y'
         dropout = 'n'
         show = 'n'
@@ -30,7 +31,8 @@ def maker(name,fullseq,amplifier,pause,polyAT,polyCG,txptome,numbr,cgupper,cglow
         return(output(cdna,g,fullseq,count,amplifier,name,pause,seqs,today,polyAT,polyCG,cgupper,cglower,MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT,maxprobes,None),count)
 
     else:
-        print("blasting")
+        #print("blasting")
+        print()
         BlastProbes = 'n'
         dropout = 'n'
         show = 'n'
