@@ -43,9 +43,9 @@ This current iteration has added features that enable users to:
   B Duygu Özpolat    bdozpolat [at] wustl.edu
   ```
 
-## How to use the software
+## How to use the software from the command line
 
-### From the command line
+### 
   + ### Basic creation of a single probe set
     Required values include the amplifier desired, a name for the probe set, and the sense sequence of the mRNA.
 
@@ -134,7 +134,7 @@ This current iteration has added features that enable users to:
     $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
     ```
 
-### From a Python script
+## How to use the software in a custom Python script
   We have also created a Python library that can be used in your already existing pipelines. 
   
   #### hcr(amplifier, name, sequence, *kwargs)
@@ -149,6 +149,9 @@ This current iteration has added features that enable users to:
   + "txptome" - The file name of your reference transcriptome
   + "tpath"   - The path to where the transcriptome is on your drive
   ```
+  import os
+  os.chdir("/path/to/hcr/probe/maker/software")
+  
   import hcr
 
   # Variables are created containing the required values \ 
@@ -163,7 +166,7 @@ This current iteration has added features that enable users to:
   hcr.hcr(amp,name,seq)
   ```
 
-  # Citation
+## Citation
   If you use this program to create probe pairs, please cite this paper in your publication.
 
   ```
