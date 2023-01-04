@@ -1,6 +1,5 @@
 # [Özpolat lab at WUStL](https://bduyguozpolat.org/research)
-[![DOI](https://zenodo.org/badge/265590174.svg)](https://zenodo.org/badge/latestdoi/265590174)
-
+[Cite us!](https://doi.org/10.1002/jez.b.23100)
 
 ## Hybridization Chain Reaction in situ probe generator for the command line
 *Generate HCR-3.0-style Probe Pairs for fluorescent* in situ *mRNA visualization*
@@ -60,7 +59,7 @@ This current iteration has added features that enable users to:
     $ Name Chosen: YourFavGene
     $ The sequence given for probe production is: AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
     
-    $ It looks like we found some probes. Check here .\ProbemakerOut\TXT\B1_YourFavGene_1_Delay0.txt to see the results.
+    $ It looks like we found some probes. Check here.\ProbemakerOut\TXT\B1_YourFavGene_1_Delay0.txt to see the results.
     $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\B1_YourFavGene_1_Delay0oPool.xlsx.
     $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
     ```
