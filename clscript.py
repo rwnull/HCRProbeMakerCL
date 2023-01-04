@@ -1,7 +1,7 @@
 import os,argparse,sys
 from vers import vers
 from mainscript_core import cleanup, cleanup2
-# importing hcr maker subscripts
+# importing hcr maker sub-scripts
 from hairpinseq import hairpins
 from CoD import creatorofdirs as cod
 import maker37
@@ -394,14 +394,14 @@ def clb():
     if args.blastn_ref:
         txpttemp = os.path.abspath(os.path.expandvars(os.path.expanduser(args.blastn_ref)))
         tpath, txptome = os.path.split(txpttemp) #args.blastn_ref)
-        ext = ["fa","fasta"]
+        ext = ["fa","fasta","rtf","txt"]
         if str(txptome.split(".")[-1]) in ext :
             print("Transcriptome reference: % s, located in the directory % s" % (str(txptome),str(tpath)))
             print("Full path is "+txpttemp)
         else:
             print()
             print()
-            print("The use of the blast function requires a .fa or .fasta file format. Please choose a different file.")
+            print("The use of the blast function requires fasta formatted file with a .txt, .rtf, .fa or .fasta file extension. Please choose a different file.")
             print()
             raise AssertionError
     if args.out_file:
@@ -447,7 +447,9 @@ def action(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
     if results != None:
         
         print("It looks like we found some probes. Check here "+str(where)+".txt to see the results.")
+        print()
         print("You can find an IDT opool submission form located here "+str(whereopool)+"oPool.xlsx.")
+        print()
         print("And you can find a bulk primer order here: "+str(whereoligo)+"oligo.xlsx, this is a rare type of submission for generating a lifetime supply.")
         with open(where,"w") as f:
             #print(str(f))

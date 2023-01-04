@@ -30,6 +30,7 @@ def gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
                 amp = str(amplifier[i])
                 filename2=str(filename+"_"+name)
                 print(filename2)
+                print()
                 seq = str(entry.seq)
                 gc = str(cglower)+"-"+str(cgupper)
                 pdf=pdf.append({"file":filename2,"id":name,"seq":seq,"amp":amp,"GC":gc,"gcr":polyCG,"atr":polyAT,"delay":pause,"blast":txptome,"maxnum":maxprobes},ignore_index=True)
@@ -42,7 +43,7 @@ def gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
             
             else:
                 pass
-        print(pdf)
+        #print(pdf)
 
     
     f.close()
@@ -70,5 +71,5 @@ pdf=fastbatch()
 
 
 
-print(pdf)
+#print(pdf)
 

@@ -112,6 +112,38 @@ This current iteration has added features that enable users to:
     $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\S41_YourFavGene_1_Delay0oPool.xlsx.
     $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\S41_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
     ```
+  + ### Making probe pairs from a large list of sequences
+    When called, the "batch.py" program will take in a specified FASTA-formatted file and produce a probe pool for each one. To indicate where the FASTA file is, use the *-batch* flag followed by the file's location.
+
+    When using this function you can provide a comma-separated list of the amplifiers you want to use. The program will start with the first listed and proceed through each of the sequences in the FASTA file. If your FASTA file has more sequences than the number of amplifiers specified, the algorithm will loop back to the beginning of the list.
+
+    If for example the fasta file has 3 sequences:
+    
+    *fasta_file.fasta*
+
+    >\>Sequence1\
+      ATTCGGGAGT...\
+    \>Sequence2\
+      GCTTTGAACA...\
+    \>Sequence3\
+      CCTGAGCCTG...
+
+    But we only want to use 2 amplifiers, B7 and S10, the program will produce the following probe pools:
+
+    >B7-TargetGene1\
+    S10-TargetGene2\
+    B7-TargetGene3  
+
+    It can be useful to also specify the max number of probe pairs you want the program to make by using the *-max* flag followed by an integer.
+
+    For reference the maximum number of probe pairs in a single IDT oPool that can be ordered before incurring an additional per base charge is 36. 
+
+    *Input*
+    ```
+    $ cd /location/of/the/downloaded/scripts
+
+    $ python .\batch.py -amp b1,b2 -batch ./test.fa -max 36
+    ```
   + ### Using BLASTn to flag potentially promiscuous probe pairs
     Though HCR with split initiators is less likely to generate background fluorescence, you may want to check for the potential of off-target binding during the probe design process. We have built in blastn functionality that flags probe pairs that have high coverage of multiple sequences within a fasta file. This function does not remove the sequences, it simply highlights them so that the user can investigate further and choose to remove if they want. Sequences are only flagged if both halves of the probe pair match a target sequence. Perfect alignment of a single half, will not result in flagging as it should not result in background fluorescence.
 

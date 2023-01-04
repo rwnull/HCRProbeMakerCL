@@ -49,11 +49,13 @@ def max33(maxprobe,seqs,numbr):
                 else:
                     a+=1
                     pass    
-            print("reduced")
+            print("The number of probe pairs has been limited by the user.")
+            print()
 
             return(reduced)
         elif  int(numbr) >=  int(len(seqs)):
-            print("There were fewer than "+str(numbr)+" pairs, no action taken.")
+            print("There were fewer than "+str(numbr)+" pairs, no action to limit the number of probe pairs was taken.")
+            print()
             return(seqs)
     else:
         return(seqs)
