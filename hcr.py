@@ -21,6 +21,7 @@ initializevals = {
     "maxprobes": 'y',
     "dirslist": cod(),
     "savevariable":'f',
+    "low":0,
     }
 
 
@@ -42,16 +43,16 @@ def hcr(amplifier,name,seq,**kwargs):
             print(l)
 
     args = l
-    hp,ampli,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args = l["hp"],l["ampli"],l["name"],l["seq"],l["cglower"],l["cgupper"],l["polyAT"],l["polyCG"],l["pause"],l["numbr"],l["maxprobes"],l["txptome"],l["tpath"],l["txpttemp"],l["outtemp"],l["opath"],l["filenm"],l["batchfile"],l["dirslist"],l["savevariable"],args
+    hp,ampli,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low = l["hp"],l["ampli"],l["name"],l["seq"],l["cglower"],l["cgupper"],l["polyAT"],l["polyCG"],l["pause"],l["numbr"],l["maxprobes"],l["txptome"],l["tpath"],l["txpttemp"],l["outtemp"],l["opath"],l["filenm"],l["batchfile"],l["dirslist"],l["savevariable"],args,l["low"]
     if batchfile == None:
         ampli = list(str(amplifier).split(','))
         if len(list(ampli)) == 1:
             ampli = list(str(amplifier).split(','))
-            action(hp,ampli[0],name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args)
+            action(hp,ampli[0],name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low)
 
         else:
             for xamp in amplifier:
-                action(hp,xamp,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args)
+                action(hp,xamp,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low)
 
     else:
         pass

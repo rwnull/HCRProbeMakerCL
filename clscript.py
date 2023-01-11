@@ -25,9 +25,10 @@ def cl():
     parser.add_argument("-polyCG","-polyGC", "--polyGC_run_max", help = "Longest permitted homopolymeric run of G or C.  Example: -polyCG 4  <-- largest run of G or C will be GGGG or CCCC")
     parser.add_argument("-pause", "--five_prime_delay", help = "How many bases from 5' end of the sequence before starting to design probes hybridize? ex. 100 ")
     parser.add_argument("-b", "--blastn_ref", help = "Provide the path to your transcriptome. Using this optional (not required to run the script) command indicates that you want to blast potential probe pairs against a reference. Example: 'C:\Transcriptomes\mytranscriptome.fasta' or '/home/Transcriptomes/mytranscriptome.fa' ")
-    parser.add_argument("-prnum", "-maxpr", "--max_num_probepairs", help = "Enter an integer if you want to limit the number of probe pairs reported. If the value entered is greater than what is possible to be made, all pairs will be returned. Not entering a value will always return the maximum number of probes found that meet the other criteria specified. ")
+    parser.add_argument("-mxnum","-max", "-maxpr", "--max_num_probepairs", help = "Enter an integer if you want to limit the number of probe pairs reported. If the value entered is greater than what is possible to be made, all pairs will be returned. Not entering a value will always return the maximum number of probes found that meet the other criteria specified. ")
+    parser.add_argument("-mnnum","-min", "-minpr", "--soft_min_probepairs", help = "Enter an integer number of probe pairs desired. If the sequence is not long enough to theoretically make this number of probe pairs, the sequence will be skipped. Not entering a value will allow any number of probe pairs that meet the other criteria specified. It is possible that the theoretical limit will not be possible to be made and what is returned may be fewer than requested. ")
     parser.add_argument("-hairpinseqs","-hpseqs", "--Hairpin_Sequences", help="List the sequences of the hairpins. Example: -hairpinseqs 'B13' ")
-
+    parser.add_argument("-o","-outpath", "--output_path", help="Option specifying a particular path to an output directory. Example: C:\Path\To\Desired\Directory ")
 
 
 
@@ -50,17 +51,18 @@ def cl():
     cgupper = 1.00
     cglower = 0.00
     maxprobes = 'y'
+    low = 0
 
-
-
-
-    dirslist = cod()
 
     # Read arguments from command line and create variables
     args = parser.parse_args()
     savevariable = 'f'
 
-
+    if args.output_path:
+        os.chdir(args.output_path)
+        dirslist = cod()
+    else:
+        dirslist = cod()
     if args.Hairpin_Sequences:
         try:
             hp = args.Hairpin_Sequences.upper()
@@ -193,6 +195,9 @@ def cl():
         numbr = int(args.max_num_probepairs)
         maxprobes = 'n'
         print("The maximum number of probe pairs made will be % s." % (str(numbr)))
+    if args.soft_min_probepairs:
+        low = ((int(args.soft_min_probepairs)-1)*54)+52
+        print("Transcripts with fewer than % s base pairs made will be ignored because a lower limit of % s probe pairs was requested." % (str(low),str(args.soft_min_probepairs)))
     if args.blastn_ref:
         txpttemp = os.path.abspath(os.path.expandvars(os.path.expanduser(args.blastn_ref)))
         tpath, txptome = os.path.split(txpttemp) #args.blastn_ref)
@@ -210,7 +215,7 @@ def cl():
 
 
 
-    return(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args)
+    return(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low)
 
 
 
@@ -235,6 +240,7 @@ def clb():
     cgupper = 1.00
     cglower = 0.00
     maxprobes = 'y'
+    low = 0
 
 
 
@@ -242,40 +248,37 @@ def clb():
     
     # Adding optional arguments
     parser.add_argument("-amp", "--amplifier", help = "Which amplifier you intend to use with these probes. Supports B1-B5,B7,B9,B10,B11,B13,B14,B15,B17,S10,S23,S25,S34,S35, and S41. Example: -amp B1 ")
-    #parser.add_argument("-ramp", "--rand_amplifier", help = "Have the program choose a random amplifier. Supports B1-B5,B7,B9,B10,B11,B13,B14,B15,B17,S10,S23,S25,S34,S35, and S41. Example: -amp B1 ")
-    #parser.add_argument("-ordamp", "--ordered_amplifier", help = "The program will take a list of amplifiers and apply them to successive probe sets. Batch processing only. Supports B1-B5,B7,B9,B10,B11,B13,B14,B15,B17,S10,S23,S25,S34,S35, and S41. Example: -amp B1 ")
-
-    #parser.add_argument("-name", "--seq_name", help = "*REQUIRED INPUT*   What is the gene name? Example: eGFP")
-    #parser.add_argument("-seq", "--full_target_seq", help = "*REQUIRED INPUT*   Enter the sense sequence of your cDNA.")
     parser.add_argument("-cg", "-gc", "--gc_range", help = "Set the lower and upper limits of target sequence GC content from lowest to highest allowable.  Example: -gc 20-75")
     parser.add_argument("-polyAT","-polyTA", "--polyAT_run_max", help = "Longest permitted homopolymeric run of A or T.  Example: -polyAT 5  <-- largest run of A or T will be AAAAA or TTTTT")
     parser.add_argument("-polyCG","-polyGC", "--polyGC_run_max", help = "Longest permitted homopolymeric run of G or C.  Example: -polyCG 4  <-- largest run of G or C will be GGGG or CCCC")
     parser.add_argument("-pause", "--five_prime_delay", help = "How many bases from 5' end of the sequence before starting to design probes hybridize? ex. 100 ")
     parser.add_argument("-b", "--blastn_ref", help = "Provide the path to your transcriptome. Using this optional (not required to run the script) command indicates that you want to blast potential probe pairs against a reference. Example: 'C:\Transcriptomes\mytranscriptome.fasta' or '/home/Transcriptomes/mytranscriptome.fa' ")
-    parser.add_argument("-prnum", "-maxpr", "--max_num_probepairs", help = "Enter an integer if you want to limit the number of probe pairs reported. If the value entered is greater than what is possible to be made, all pairs will be returned. Not entering a value will always return the maximum number of probes found that meet the other criteria specified. ")
-    parser.add_argument("-o", "--out_file", help = "Provide the path and file name to where the results should be saved. Example: 'C:\PathtoResult\myresult.txt' or '/home/PathtoResult/myresult.txt' ")
-    #parser.add_argument("-hairpinseqs","-hpseqs", "--Hairpin_Sequences", help="List the sequences of the hairpins. Example: -hairpinseqs 'B13' ")
-    parser.add_argument("-batch", "--batch", help="If you have a fasta file with multiple sequences you would like to process, insert the path to the file here.")
+    parser.add_argument("-mxnum","-max", "-maxpr", "--max_num_probepairs", help = "Enter an integer if you want to limit the number of probe pairs reported. If the value entered is greater than what is possible to be made, all pairs will be returned. Not entering a value will always return the maximum number of probes found that meet the other criteria specified. ")
+    parser.add_argument("-mnnum","-min", "-minpr", "--soft_min_probepairs", help = "Enter an integer number of probe pairs desired. If the sequence is not long enough to theoretically make this number of probe pairs, the sequence will be skipped. Not entering a value will allow any number of probe pairs that meet the other criteria specified. It is possible that the theoretical limit will not be possible to be made and what is returned may be fewer than requested. ")
+    parser.add_argument("-o","-outpath", "--output", help = "Option specifying a particular path to an output directory. Example: C:\Path\To\Desired\Directory ")
+    parser.add_argument("-batch", "--batch", help = "If you have a fasta file with multiple sequences you would like to process, insert the path to the file here.")
 
 
 
 
 
 
-
-
-
-    dirslist = cod()
-    
     # Read arguments from command line and create variables
     args = parser.parse_args()
     
     savevariable = 'f'
+    
+    if args.output:
+        os.chdir(args.output)
+        dirslist = cod()
+        opath = str(dirslist[5])
+    else:
+        dirslist = cod()
+        opath=str(dirslist[5])
 
     if args.amplifier:
         amps = ['B1','B2','B3','B4','B5','B7','B9','B10','B11','B13','B14','B15','B17','S10','S23','S25','S34','S35','S41']
         if (str(args.amplifier).upper()).count("B") + (str(args.amplifier).upper()).count("S")<=1:
-            #print((str(args.amplifier).upper()).count("B") + (str(args.amplifier).upper()).count("S"))
             try:
                 amplifier = args.amplifier.upper()
                 
@@ -325,39 +328,6 @@ def clb():
             print("You must select an amplifier from the following list. B1-B5,B7,B9-B11,B13-B15,B17,S10,S23,S25,S34,S35, or S41")
             print()
             raise AssertionError   
-    '''#if args.seq_name:
-        try:
-            name = str(args.seq_name)
-            print("Name Chosen: % s" % (str(name)))
-        except:
-            print()
-            print()
-            print('There must be an ID given for the sequence. Please try again using the flag -name YourSequenceName')
-            print()
-            raise AssertionError
-    #else:
-            print()
-            print()
-            print('There must be an ID given for the sequence. Please try again using the flag -name YourSequenceName')
-            print()
-            raise AssertionError
-    #if args.full_target_seq:
-        try:
-            seq = args.full_target_seq.upper()
-            seq = cleanup(seq)
-            print("The sequence given for probe production is: % s" % (str(seq)))
-        except:
-            print()
-            print()
-            print('There must be a cDNA or mRNA sequence provided. Please try again using the flag "-seq". For example: -seq ATTGCGGAGC or -seq AUGGCUAAUCG')
-            print()
-            raise AssertionError           
-    #else:
-        print()
-        print()
-        print('There must be a cDNA or mRNA sequence provided. Please try again using the flag "-seq". For example: -seq ATTGCGGAGC or -seq AUGGCUAAUCG')
-        print()
-        raise AssertionError'''
     if args.gc_range:
         try:
             cglower, cgupper = args.gc_range.split("-")
@@ -391,6 +361,9 @@ def clb():
         numbr = int(args.max_num_probepairs)
         maxprobes = 'n'
         print("The maximum number of probe pairs made will be % s." % (str(numbr)))
+    if args.soft_min_probepairs:
+        low = ((int(args.soft_min_probepairs)-1)*54)+52
+        print("Transcripts with fewer than % s base pairs made will be ignored because a lower limit of % s probe pairs was requested." % (str(low),str(args.soft_min_probepairs)))
     if args.blastn_ref:
         txpttemp = os.path.abspath(os.path.expandvars(os.path.expanduser(args.blastn_ref)))
         tpath, txptome = os.path.split(txpttemp) #args.blastn_ref)
@@ -404,47 +377,30 @@ def clb():
             print("The use of the blast function requires fasta formatted file with a .txt, .rtf, .fa or .fasta file extension. Please choose a different file.")
             print()
             raise AssertionError
-    if args.out_file:
-        outtemp = os.path.abspath(os.path.expandvars(os.path.expanduser(args.out_file)))
-        opath, filenm = os.path.split(outtemp)
-        ext = ["txt","rtf"]
-        savevariable = 'T'
-        if str(filenm).split('.')[-1] in ext:
-            print("File with results is known as % s, and is located in the directory % s" % (str(filenm),str(opath)))
-        else:
-            print()
-            print()
-            print('The use of the -out or --out_file flag requires a path pointing to a file ending with ".txt" or ".rtf". Example: -o C:/pathtooutput/output.txt or --out_file /home/path/output.rtf')
-            print()
-            raise AssertionError
-    else:
-        opath = str(dirslist[5])
+
     if args.batch:
         batchfile = os.path.abspath(os.path.expandvars(os.path.expanduser(args.batch)))
         print("The directory being used for the batch is: "+str(batchfile))
-
-    #print(type(hp),type(amplifier),type(name),type(seq),type(cglower),type(cgupper),type(polyAT),type(polyCG),type(pause),type(numbr),type(maxprobes),type(txptome),type(tpath),type(txpttemp),type(outtemp),type(opath),type(filenm),type(batchfile),type(dirslist),type(savevariable),type(args))
-    return(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args)
+    
+    print(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low)
+    return(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low)
 
 
     
-def action(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args):
-        ## Sending inputs to the maker algo  
-    #print(maker37.maker(name,seq,amplifier,pause,polyAT,polyCG,txpttemp,numbr,cgupper,cglower,dirslist[0],dirslist[1],dirslist[2],dirslist[3],dirslist[4],maxprobes))
+def action(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low):
+    ## Sending inputs to the maker algo  
     sys.tracebacklimit=0
+    
     MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT = str(dirslist[0]),str(dirslist[1]),str(dirslist[2]),str(dirslist[3]),str(dirslist[4]),str(dirslist[5])
-    results,count=(maker37.maker(name,seq,amplifier,pause,polyAT,polyCG,txpttemp,numbr,cgupper,cglower,MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT,maxprobes))
-    #print(results)
-    #print((name,seq,amplifier,pause,polyAT,polyCG,txpttemp,numbr,cgupper,cglower,MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT,maxprobes))
-    #results=list(maker37.maker(name,seq,amplifier,pause,polyAT,polyCG,txpttemp,numbr,cgupper,cglower,MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT,maxprobes))
-    #print(type(results))
+    results,count=(maker37.maker(name,seq,amplifier,pause,polyAT,polyCG,txpttemp,numbr,cgupper,cglower,MEDIA_ROOT,BLAST_ROOT,MEDIA_FASTA,MEDIA_OPOOL,MEDIA_OLIGO,MEDIA_TXT,maxprobes,low))
+
     i=1
 
-    where = os.path.join(str(MEDIA_TXT),str(amplifier+'_'+name+"_"+str(count)+'_Delay'+str(pause)))#str(amplifier)+"_"+str(filenm)+".txt")
+    where = os.path.join(str(MEDIA_TXT),str(amplifier+'_'+name+"_"+str(count)+'_Delay'+str(pause)+".txt"))#str(amplifier)+"_"+str(filenm)+".txt")
     whereopool = os.path.join(str(MEDIA_OPOOL),str(amplifier+'_'+name+"_"+str(count)+'_Delay'+str(pause)))#str(amplifier)+"_"+str(filenm)+".txt")
     whereoligo = os.path.join(str(MEDIA_OLIGO),str(amplifier+'_'+name+"_"+str(count)+'_Delay'+str(pause)))#str(amplifier)+"_"+str(filenm)+".txt")    
 
-    if results != None:
+    if results:# != None:
         
         print("It looks like we found some probes. Check here "+str(where)+".txt to see the results.")
         print()
@@ -452,7 +408,6 @@ def action(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
         print()
         print("And you can find a bulk primer order here: "+str(whereoligo)+"oligo.xlsx, this is a rare type of submission for generating a lifetime supply.")
         with open(where,"w") as f:
-            #print(str(f))
             for line in results:#[0:12]:
                 if type(line) is dict:
                     for key, value in line.items():
@@ -527,3 +482,4 @@ def action(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
                 pass
     else:
         print("Sorry there were no probes that we could make. Double check your sequence and/or loosen your constraints.")
+        pass

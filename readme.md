@@ -137,11 +137,19 @@ This current iteration has added features that enable users to:
 
     For reference the maximum number of probe pairs in a single IDT oPool that can be ordered before incurring an additional per base charge is 36. 
 
+    When working with large sets of data, you may want to filter against sequences that have a small number of potential probe pairs. In this instance, use the  *-min* flag followed by the lower limit of probe pairs you would prefer.
+
+    >*Keep in mind that this lower limit is for potential probe pairs, if you have added other parameters you may find that the final output of probe pairs is less than the limit you've specified.*
+
+    In the case of a big data set, it may be helpful to specify where you want the outputs. Specify the path you want to use with *-o* followed by the full path to where you want the output.
+
+    Due to how the program is currently written, the blast feature may be time/resource prohibitive when used with large batch files. Use with care.
+
     *Input*
     ```
     $ cd /location/of/the/downloaded/scripts
 
-    $ python .\batch.py -amp b1,b2 -batch ./test.fa -max 36
+    $ python .\batch.py -amp b1,b2 -batch ./test.fa -min 20 -max 36 -o /path/to/where/you/want/results
     ```
   + ### Using BLASTn to flag potentially promiscuous probe pairs
     Though HCR with split initiators is less likely to generate background fluorescence, you may want to check for the potential of off-target binding during the probe design process. We have built in blastn functionality that flags probe pairs that have high coverage of multiple sequences within a fasta file. This function does not remove the sequences, it simply highlights them so that the user can investigate further and choose to remove if they want. Sequences are only flagged if both halves of the probe pair match a target sequence. Perfect alignment of a single half, will not result in flagging as it should not result in background fluorescence.

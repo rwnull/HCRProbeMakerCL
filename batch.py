@@ -2,20 +2,21 @@ from genericpath import isdir, isfile
 from Bio import SeqIO as fa
 import pandas as pd
 import numpy as np
-import os,argparse,datetime,maker37,sys
-from vers import vers
-from mainscript_core import cleanup,cleanup2
+import os,sys
+from mainscript_core import cleanup2
 from clscript import clb, action
 
 sys.tracebacklimit=0
 
-def gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i):
+def gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,low):
     sys.tracebacklimit=0
     protchar = "PQEFLX"
     pdf = pd.DataFrame(columns=["file","id","seq","amp","GC","gcr","atr","delay","blast","out","maxnum"])
             
     with open(os.path.join(batchfile, filename), 'r') as f:    
-        filename,ext = filename.split(".")
+        print(filename.rpartition(".")[0])
+        filename,ext = filename.rpartition(".")[0],filename.split(".")[-1]
+        print(filename,ext)
         
         for entry in fa.parse(f,"fasta"):
             print(entry)
@@ -29,12 +30,11 @@ def gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
 
                 amp = str(amplifier[i])
                 filename2=str(filename+"_"+name)
-                print(filename2)
                 print()
                 seq = str(entry.seq)
                 gc = str(cglower)+"-"+str(cgupper)
                 pdf=pdf.append({"file":filename2,"id":name,"seq":seq,"amp":amp,"GC":gc,"gcr":polyCG,"atr":polyAT,"delay":pause,"blast":txptome,"maxnum":maxprobes},ignore_index=True)
-                action(hp,amp,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filename2,batchfile,dirslist,savevariable,args)
+                action(hp,amp,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filename2,batchfile,dirslist,savevariable,args,low)
 
                 if i < len(amplifier)-1:
                     i+=1
@@ -43,24 +43,26 @@ def gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
             
             else:
                 pass
-        #print(pdf)
+
 
     
     f.close()
-    return(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,pdf)
+    return(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,pdf,low)
 
-def fastbatch():  #add options corresponding to the normal search: random, file-based, or vectors 
+def fastbatch(): 
     sys.tracebacklimit=0
-    hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args = clb()
+    hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,low = clb()
+    
 
     i=0
     if isdir(batchfile):
         for filename in os.listdir(batchfile):
-            hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,pdf = gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i)
+            hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,pdf,low = gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,low)
             
     elif isfile(batchfile):
+        
         batchfile,filename = os.path.split(batchfile)
-        hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,pdf = gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i)
+        hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,pdf,low = gnarly(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxprobes,txptome,tpath,txpttemp,outtemp,opath,filenm,batchfile,dirslist,savevariable,args,filename,i,low)
     else:   
         pass
     return(pdf)
@@ -70,6 +72,4 @@ def fastbatch():  #add options corresponding to the normal search: random, file-
 pdf=fastbatch()
 
 
-
-#print(pdf)
 
