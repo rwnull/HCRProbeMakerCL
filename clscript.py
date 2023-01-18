@@ -33,16 +33,16 @@ def cl():
 
 
     # Initialization of optional variables
-    hp = None 
-    amplifier = None
-    name = None
-    seq = None
+    hp = "" #None 
+    amplifier = "" #None
+    name = "" #None
+    seq = "" #None
     txptome = None
     tpath = None
     txpttemp = None
-    outtemp = None
-    opath = None
-    filenm = None
+    outtemp = "" #None
+    opath = "" #None
+    filenm = "" #None
     batchfile = None
     pause = 0
     polyAT = 10000
@@ -61,8 +61,12 @@ def cl():
     if args.output_path:
         os.chdir(args.output_path)
         dirslist = cod()
+        #print("output_path == True")
+        #print(dirslist)
     else:
         dirslist = cod()
+        #print("output_path == False")
+        #print(dirslist)
     if args.Hairpin_Sequences:
         try:
             hp = args.Hairpin_Sequences.upper()

@@ -208,10 +208,10 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
             ## Probe BLAST setup and execution from FASTA file prepared in previous step
 
 
-            cline = bn(cmd="blastn", template_type = 'coding', template_length = 16, word_size = 11, query = os.path.join(MEDIA_FASTA,(str(name)+"PrelimProbes.fa")), subject = str(db2), dust='no', outfmt= '6 delim="$"  std qlen slen qseq sseq')
+            cline = bn(cmd="blastn", template_type = 'coding', template_length = 16, word_size = 11, query = os.path.join(MEDIA_FASTA,(str(name)+"PrelimProbes.fa")), subject = str(db2), dust='no', outfmt= '6 delim="\\t"  std qlen slen qseq sseq')
             stdout, stderr = cline() #cline() calls the string as a command and passes it to the command line, outputting the blast results to one variable and errors to the other
-            dt = [(np.unicode_,100),(np.unicode_,100),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.float),(np.float),(np.int32),(np.int32),(np.unicode_,10000),(np.unicode_,10000)]
-            blastresult = (np.genfromtxt(io.StringIO(stdout),delimiter = '$',dtype = dt))# "qseqid,sseqid,pident,length,mismatch,gapopen,qstart,qend,sstart,send,evalue,bitscore")
+            dt = [(np.unicode_,100),(np.unicode_,100),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.float32),(np.float32),(np.int32),(np.int32),(np.unicode_,10000),(np.unicode_,10000)]
+            blastresult = (np.genfromtxt(io.StringIO(stdout),delimiter = '\\t',dtype = dt))# "qseqid,sseqid,pident,length,mismatch,gapopen,qstart,qend,sstart,send,evalue,bitscore")
 
 
 
@@ -241,7 +241,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                                 pass
                         z=0
                         while z < len(seqs):
-                            print(seqs[z][3],blastresult[i][0])
+                            #print(seqs[z][3],blastresult[i][0])
                             if str(seqs[z][3])+'*' == '>'+str(blastresult[i][0]):
                                 seqs[z][3] = str(seqs[z][3])+'*'
                                 z+=1
@@ -261,7 +261,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
             fltrblastbad = 0
             fltrblastok = 0
 
-            if len(filterblast) != 0:
+            if len(filterblast) >= 0:
                 filterblast = np.array(filterblast)
                 uniques = np.unique((uniques))     ##
                 count = str((len(uniques)))
@@ -272,6 +272,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                         for good in uniques:
                             if good == bad:
                                 good = str(good)+'*'
+                                #this is a good place to have an optional dropout
                             else:
                                 pass
 
@@ -299,14 +300,14 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
 
 
             seqs = max33(maxprobe,seqs,numbr)
-            count = int(len(seqs))-1
+            count = int(len(seqs))
 
             print()
 
             a=0
             b=0
             seqs1={}
-            while a < len(seqs)-1:
+            while a <= len(seqs)-1:
                 tmp = (seqs[a])
                 graphic[tmp[0]:tmp[2]] = str(tmp[1])
                 seqs1[b]=tmp
