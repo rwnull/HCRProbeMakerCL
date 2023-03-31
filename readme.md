@@ -1,6 +1,8 @@
 # [Özpolat lab at WUStL](https://bduyguozpolat.org/research)
 [Cite us!](https://doi.org/10.1002/jez.b.23100)
 
+# This branch is for PCs, if you use a Mac please work from this [branch](https://github.com/rwnull/HCRProbeMakerCL/tree/HCRProbeMakerCLforMac).
+
 ## Hybridization Chain Reaction in situ probe generator for the command line
 *Generate HCR-3.0-style Probe Pairs for fluorescent* in situ *mRNA visualization*
 
