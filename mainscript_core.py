@@ -208,7 +208,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
             ## Probe BLAST setup and execution from FASTA file prepared in previous step
 
 
-            cline = bn(cmd="blastn", template_type = 'coding', template_length = 16, word_size = 11, query = os.path.join(MEDIA_FASTA,(str(name)+"PrelimProbes.fa")), subject = str(db2), dust='no', outfmt= '6 delim="\\t"  std qlen slen qseq sseq')
+            cline = bn(cmd="blastn", template_type = 'coding', template_length = 16, word_size = 11, query = os.path.join(MEDIA_FASTA,(str(name)+"PrelimProbes.fa")), subject = str(db2), dust='no', outfmt= '6 delim="\t"  std qlen slen qseq sseq')
             stdout, stderr = cline() #cline() calls the string as a command and passes it to the command line, outputting the blast results to one variable and errors to the other
             dt = [(np.unicode_,100),(np.unicode_,100),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.float32),(np.float32),(np.int32),(np.int32),(np.unicode_,10000),(np.unicode_,10000)]
             blastresult = (np.genfromtxt(io.StringIO(stdout),delimiter = '\t',dtype = dt))# "qseqid,sseqid,pident,length,mismatch,gapopen,qstart,qend,sstart,send,evalue,bitscore")
