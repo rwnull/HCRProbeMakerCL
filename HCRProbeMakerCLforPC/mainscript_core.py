@@ -337,7 +337,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                     print()
                     print("All preliminary probe pairs will be used.")
                     print()
-                    print("All preliminary probe pairs will be used.")
+                    
                     count,seqs,g = noblast(newlist1,fullseq1,maxprobe1,numbr1,cdna1)
                     uniquesbad,uniques,fltrblastbad,fltrblastok,blst = [],[],[],[],None
                     return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs,g,blst]
@@ -352,7 +352,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                 print()
                 print("All preliminary probe pairs will be used.")
                 print()
-                print("All preliminary probe pairs will be used.")
+                
                 uniquesbad,uniques,fltrblastbad,fltrblastok,blst = [],[],[],[],None
                 count,seqs,g = noblast(newlist1,fullseq1,maxprobe1,numbr1,cdna1)
                 return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs,g,blst]
