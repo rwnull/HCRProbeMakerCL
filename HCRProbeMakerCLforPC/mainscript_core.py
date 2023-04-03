@@ -327,13 +327,31 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                     blst = pd.DataFrame.to_dict(blst)
                     return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs1,g,blst]
                 else:
-                    print("No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print("WARNING: No BLAST hits were found.")
+                    print()
+                    print("All preliminary probe pairs will be used.")
+                    print()
                     print("All preliminary probe pairs will be used.")
                     count,seqs,g = noblast(newlist1,fullseq1,maxprobe1,numbr1,cdna1)
                     uniquesbad,uniques,fltrblastbad,fltrblastok,blst = [],[],[],[],None
                     return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs,g,blst]
             else:
-                print("No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print("WARNING: No BLAST hits were found.")
+                print()
+                print("All preliminary probe pairs will be used.")
+                print()
                 print("All preliminary probe pairs will be used.")
                 uniquesbad,uniques,fltrblastbad,fltrblastok,blst = [],[],[],[],None
                 count,seqs,g = noblast(newlist1,fullseq1,maxprobe1,numbr1,cdna1)
