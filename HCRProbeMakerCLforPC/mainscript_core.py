@@ -156,6 +156,7 @@ def noblast(newlist,fullseq,maxprobe,numbr,cdna):
 
 def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_ROOT):
     sys.tracebacklimit=0
+    newlist1,fullseq1,maxprobe1,numbr1,cdna1 = newlist,fullseq,maxprobe,numbr,cdna
     if len(newlist) > 0:
         if db2 == None:
             graphic = ['n']*cdna
@@ -212,121 +213,133 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
             stdout, stderr = cline() #cline() calls the string as a command and passes it to the command line, outputting the blast results to one variable and errors to the other
             dt = [(np.unicode_,100),(np.unicode_,100),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.int32),(np.float32),(np.float32),(np.int32),(np.int32),(np.unicode_,10000),(np.unicode_,10000)]
             blastresult = (np.genfromtxt(io.StringIO(stdout),delimiter = '\\t',dtype = dt))# "qseqid,sseqid,pident,length,mismatch,gapopen,qstart,qend,sstart,send,evalue,bitscore")
-
-
-
+            
 
             ## This loop takes the data from the blast result and filters out probe pairs that do not meet criteria
                 ## by setting a length match requirement this eliminates off-target pairs and half-pairs
                 ## the e-value threshold ensures that the probe is a good match to the target
+            if len(blastresult) > 0:
+                
+                i=0
+                filterblast = []
+                filterblastbad = []
+                uniques = []
+                uniquesbad = []
+                while i < len(blastresult):
 
-            i=0
-            filterblast = []
-            filterblastbad = []
-            uniques = []
-            uniquesbad = []
-            while i < len(blastresult):
+                    if str(blastresult[i][0]) != name:
+                        if (blastresult[i][11]>=85.0 and blastresult[i][3]>=50):  
+                            filterblast.append(blastresult[i])
+                            uniques.append((blastresult[i][0])) 
 
-                if str(blastresult[i][0]) != name:
-                    if (blastresult[i][11]>=85.0 and blastresult[i][3]>=50):  
-                        filterblast.append(blastresult[i])
-                        uniques.append((blastresult[i][0])) 
+                            i+=1
+                        elif (blastresult[i][11]>=60.0 and blastresult[i][11]<85.0 and blastresult[i][3]>=28):
+                            for result in blastresult:
+                                if blastresult[i][0] == result[0]:
+                                    result[0] = str(result[0])+'*'
+                                else:
+                                    pass
+                            z=0
+                            while z < len(seqs):
+                                #print(seqs[z][3],blastresult[i][0])
+                                if str(seqs[z][3])+'*' == '>'+str(blastresult[i][0]):
+                                    seqs[z][3] = str(seqs[z][3])+'*'
+                                    z+=1
+                                else:
+                                    z+=1
+                                    pass
+                            filterblastbad.append(blastresult[i])
+                            uniquesbad.append((blastresult[i][0])) #str
+                            i+=1
 
-                        i+=1
-                    elif (blastresult[i][11]>=60.0 and blastresult[i][11]<85.0 and blastresult[i][3]>=28):
-                        for result in blastresult:
-                            if blastresult[i][0] == result[0]:
-                                result[0] = str(result[0])+'*'
-                            else:
-                                pass
-                        z=0
-                        while z < len(seqs):
-                            #print(seqs[z][3],blastresult[i][0])
-                            if str(seqs[z][3])+'*' == '>'+str(blastresult[i][0]):
-                                seqs[z][3] = str(seqs[z][3])+'*'
-                                z+=1
-                            else:
-                                z+=1
-                                pass
-                        filterblastbad.append(blastresult[i])
-                        uniquesbad.append((blastresult[i][0])) #str
-                        i+=1
+                        else:
+                            i+=1
 
                     else:
                         i+=1
 
-                else:
-                    i+=1
+                fltrblastbad = 0
+                fltrblastok = 0
+                
+                
+                
+                if len(filterblast) > 0: #>= 0
+                    filterblast = np.array(filterblast)
+                    uniques = np.unique((uniques))     ##
+                    count = str((len(uniques)))
+                    filterblastbad = np.array(filterblastbad)
+                    uniquesbad = np.unique((uniquesbad)) 
+                    if len(uniquesbad) > 0:
+                        for bad in uniquesbad:
+                            for good in uniques:
+                                if good == bad:
+                                    good = str(good)+'*'
+                                    #this is a good place to have an optional dropout
+                                else:
+                                    pass
 
-            fltrblastbad = 0
-            fltrblastok = 0
+                    print()
+                    print()
+                    print("Probe pairs that had possible off-target matches to the provided database (lower e-value but with high site coverage). ")
+                    print("   Pairs ")
+                    print(uniquesbad)  
+                    print()
+                    print("Probe pairs that had good matches to the provided database were determined to be the following.")
+                    print("   Pairs ")
+                    print(uniques)
+                    print()
+                    print()
 
-            if len(filterblast) >= 0:
-                filterblast = np.array(filterblast)
-                uniques = np.unique((uniques))     ##
-                count = str((len(uniques)))
-                filterblastbad = np.array(filterblastbad)
-                uniquesbad = np.unique((uniquesbad)) 
-                if len(uniquesbad) > 0:
-                    for bad in uniquesbad:
-                        for good in uniques:
-                            if good == bad:
-                                good = str(good)+'*'
-                                #this is a good place to have an optional dropout
-                            else:
-                                pass
+                    if len(uniquesbad) > 0:
+                        rmv = rmv.to_dict()
+                        a=0
+                        seqs={}
+                        while a <len(rmv["pos1"]):
+                            seqs[a] = (rmv["pos1"][a],rmv["seq"][a],rmv["pos2"][a],rmv["fasta"][a],rmv["num"][a])
+                            a += 1
+                    seqs = max33(maxprobe,seqs,numbr)
+                    count = int(len(seqs))
 
-                print()
-                print()
-                print("Probe pairs that had possible off-target matches to the provided database (lower e-value but with high site coverage). ")
-                print("   Pairs ")
-                print(uniquesbad)  
-                print()
-                print("Probe pairs that had good matches to the provided database were determined to be the following.")
-                print("   Pairs ")
-                print(uniques)
-                print()
-                print()
+                    print()
 
-                if len(uniquesbad) > 0:
-                    rmv = rmv.to_dict()
                     a=0
-                    seqs={}
-                    while a <len(rmv["pos1"]):
-                        seqs[a] = (rmv["pos1"][a],rmv["seq"][a],rmv["pos2"][a],rmv["fasta"][a],rmv["num"][a])
-                        a += 1
+                    b=0
+                    seqs1={}
+                    while a <= len(seqs)-1:
+                        tmp = (seqs[a])
+                        graphic[tmp[0]:tmp[2]] = str(tmp[1])
+                        seqs1[b]=tmp
+                        b+=1
+                        a+=1
+
+
+
+                    g = ''
+                    g = g.join(graphic) 
+                    g = Seq(g)
+                    g = g.reverse_complement()
+
+                    #if len(blastresult) >0 :
+                    cols= ["QueryID","SubjectID","PercID","MatchLength","Mismatch","Gaps","Qstart","Qend","S_start","S_end","Evalue","bitscore","Q_length","S_length","Q_MatchSeq","S_MatchSeq"]
+                    
+                    blst = pd.DataFrame(blastresult)
+                    blst = blst.rename(columns={'f0':cols[0],'f1':cols[1],'f2':cols[2],'f3':cols[3],'f4':cols[4],'f5':cols[5],'f6':cols[6],'f7':cols[7],'f8':cols[8],'f9':cols[9],'f10':cols[10],'f11':cols[11],'f12':cols[12],'f13':cols[13],'f14':cols[14],'f15':cols[15]})
+                    blst = pd.DataFrame.to_dict(blst)
+                    return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs1,g,blst]
+                else:
+                    print("No BLAST hits were found.")
+                    print("All preliminary probe pairs will be used.")
+                    count,seqs,g = noblast(newlist1,fullseq1,maxprobe1,numbr1,cdna1)
+                    uniquesbad,uniques,fltrblastbad,fltrblastok,blst = [],[],[],[],None
+                    return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs,g,blst]
             else:
-                pass
+                print("No BLAST hits were found.")
+                print("All preliminary probe pairs will be used.")
+                uniquesbad,uniques,fltrblastbad,fltrblastok,blst = [],[],[],[],None
+                count,seqs,g = noblast(newlist1,fullseq1,maxprobe1,numbr1,cdna1)
+                return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs,g,blst]
+                
 
 
-            seqs = max33(maxprobe,seqs,numbr)
-            count = int(len(seqs))
-
-            print()
-
-            a=0
-            b=0
-            seqs1={}
-            while a <= len(seqs)-1:
-                tmp = (seqs[a])
-                graphic[tmp[0]:tmp[2]] = str(tmp[1])
-                seqs1[b]=tmp
-                b+=1
-                a+=1
-
-
-
-            g = ''
-            g = g.join(graphic) 
-            g = Seq(g)
-            g = g.reverse_complement()
-
-
-            cols= ["QueryID","SubjectID","PercID","MatchLength","Mismatch","Gaps","Qstart","Qend","S_start","S_end","Evalue","bitscore","Q_length","S_length","Q_MatchSeq","S_MatchSeq"]
-            
-            blst = pd.DataFrame(blastresult)
-            blst = blst.rename(columns={'f0':cols[0],'f1':cols[1],'f2':cols[2],'f3':cols[3],'f4':cols[4],'f5':cols[5],'f6':cols[6],'f7':cols[7],'f8':cols[8],'f9':cols[9],'f10':cols[10],'f11':cols[11],'f12':cols[12],'f13':cols[13],'f14':cols[14],'f15':cols[15]})
-            blst = pd.DataFrame.to_dict(blst)
-            return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count),seqs1,g,blst]
     else:
         pass

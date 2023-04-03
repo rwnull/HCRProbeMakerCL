@@ -411,6 +411,7 @@ def action(hp,amplifier,name,seq,cglower,cgupper,polyAT,polyCG,pause,numbr,maxpr
         print("You can find an IDT opool submission form located here "+str(whereopool)+"oPool.xlsx.")
         print()
         print("And you can find a bulk primer order here: "+str(whereoligo)+"oligo.xlsx, this is a rare type of submission for generating a lifetime supply.")
+        print()
         with open(where,"w") as f:
             for line in results:#[0:12]:
                 if type(line) is dict:
