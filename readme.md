@@ -24,12 +24,12 @@ This current iteration has added features that enable users to:
 ### What you will need to use this software:
   + [Python v3.7 - v3.9](https://www.python.org/downloads)
   + Python libraries
-    + Biopython
-    + Numpy
-    + Openpyxl
-    + Pandas
+    + Biopython: biopython==1.79, bio==1.5.2
+    + Numpy==1.23.5
+    + Openpyxl==3.0.10
+    + Pandas==1.3.5
   ```
-  pip install Bio numpy openpyxl pandas
+  pip install Bio==1.5.2 numpy==1.23.5 openpyxl==3.0.10 pandas==1.3.5
   ```
   + [NCBI's BLAST+ local software suite](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
   + A reference transcriptome if intending to utilize BLAST
