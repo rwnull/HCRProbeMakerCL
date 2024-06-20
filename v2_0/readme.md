@@ -1,7 +1,7 @@
 # [Özpolat lab at WUStL](https://bduyguozpolat.org/research)
 [Cite us!](https://doi.org/10.1002/jez.b.23100)
 
-## Hybridization Chain Reaction in situ probe generator for the command line
+## Hybridization Chain Reaction in situ probe generator for the command line version 2.0
 *Generate HCR-3.0-style Probe Pairs for fluorescent* in situ *mRNA visualization*
 
 ### Intention of this program:
@@ -11,7 +11,6 @@ We were excited to venture into the realm of quick, easy, mutliplexable *in situ
 This current iteration has added features that enable users to:
   + Rapidly create probe sets for large libraries of mRNAs of interest with a single command
   + Create multiple versions of the same probe set for use with different amplifiers
-  + Integrate the probe making tools into the user's own custom Python scripts
   + Change the amplifier of an already produced set of probes for a different amplifier
   + Make probe pairs compatible with the amplifier sets created by Choi et al. (2018), Wang et al. (2020), as well as the short-hairpin paradigm developed by Tsuneoka and Funato (2020).
   + Have properly formatted forms to order probe sets as 
@@ -19,10 +18,10 @@ This current iteration has added features that enable users to:
     + Individual oligos for routinely used probe sets (~5000 reactions)
   
 ### What you'll find here:
-  + Python scripts compatible with Python versions 3.7 to 3.9
+  + Python scripts compatible with Python versions 3.7 to 3.12
 
 ### What you will need to use this software:
-  + [Python v3.7 - v3.9](https://www.python.org/downloads)
+  + [Python v3.7 - v3.12](https://www.python.org/downloads)
   + Python libraries
     + Biopython
     + Numpy
@@ -51,14 +50,12 @@ This current iteration has added features that enable users to:
     *Input*
     ```
     $ cd /location/of/the/downloaded/scripts
-    $ python ./makeprobes.py -amp B1 -name YourFavGene -seq AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
+    $ python ./HCR.py -amp B1 -in ./YourFavGene.fasta
     ```
     *Output*
     ```
     $ Amplifier Chosen: B1
-    $ Name Chosen: YourFavGene
-    $ The sequence given for probe production is: AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
-    
+        
     $ It looks like we found some probes. Check here.\ProbemakerOut\TXT\B1_YourFavGene_1_Delay0.txt to see the results.
     $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\B1_YourFavGene_1_Delay0oPool.xlsx.
     $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
@@ -69,50 +66,24 @@ This current iteration has added features that enable users to:
     *Input*
     ```
     $ cd /location/of/the/downloaded/scripts
-    $ python ./makeprobes.py -amp B1 -cg 30-70 -polyAT 5 -polyGC 3 -name YourFavGene -seq AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA 
+    $ python ./HCR.py -amp B1 -cg 20-70 -polyAT 5 -polyGC 3 -in YourFavGene.fasta -max 37 -min 10
     ```
     *Output*
     ```
-    $ Amplifier Chosen: B1
-    $ Name Chosen: YourFavGene
-    $ The sequence given for probe production is: AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
-    $ Percent CG lower limit specified: 30 percent
+    $ Amplifier(s) Chosen: B1
+    $ Percent CG lower limit specified: 20 percent
     $ Percent CG upper limit specified: 70 percent
     $ AT homopolymer limit specified: 5
     $ GC homopolymer limit specified: 3
+    $ The maximum number of probe pairs made will be 37.
+    $ Transcripts with fewer than 538 base pairs made will be ignored because a lower limit of 10 probe pairs was requested.
     
     $ It looks like we found some probes. Check here .\ProbemakerOut\TXT\B1_YourFavGene_1_Delay0.txt to see the results.
     $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\B1_YourFavGene_1_Delay0oPool.xlsx.
     $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
-    ```
-  + ### Creation of identical probe sets with multiple amplifiers 
-    Include the amplifiers as a single, comma-separated list.
-    
-    *Input*
-    ```
-    $ cd /location/of/the/downloaded/scripts
-    $ python ./makeprobes.py -amp B1,B7,S41 -name YourFavGene -seq AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
-    ```
-    *Output*
-    ```
-    $ [B1,B7,S41]
-    $ Name Chosen: YourFavGene
-    $ The sequence given for probe production is: AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
-    
-    $ It looks like we found some probes. Check here .\ProbemakerOut\TXT\B1_YourFavGene_1_Delay0.txt to see the results.
-    $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\B1_YourFavGene_1_Delay0oPool.xlsx.
-    $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
-        
-    $ It looks like we found some probes. Check here .\ProbemakerOut\TXT\B7_YourFavGene_1_Delay0.txt to see the results.
-    $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\B7_YourFavGene_1_Delay0oPool.xlsx.
-    $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B7_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
-        
-    $ It looks like we found some probes. Check here .\ProbemakerOut\TXT\S41_YourFavGene_1_Delay0.txt to see the results.
-    $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\S41_YourFavGene_1_Delay0oPool.xlsx.
-    $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\S41_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
     ```
   + ### Making probe pairs from a large list of sequences
-    When called, the "batch.py" program will take in a specified FASTA-formatted file and produce a probe pool for each one. To indicate where the FASTA file is, use the *-batch* flag followed by the file's location.
+    When a fasta file with more than one sequence is uploaded, program will produce a probe pool for each one. To indicate where the FASTA file is, use the *-in* flag followed by the file's location.
 
     When using this function you can provide a comma-separated list of the amplifiers you want to use. The program will start with the first listed and proceed through each of the sequences in the FASTA file. If your FASTA file has more sequences than the number of amplifiers specified, the algorithm will loop back to the beginning of the list.
 
@@ -141,68 +112,45 @@ This current iteration has added features that enable users to:
 
     >*Keep in mind that this lower limit is for potential probe pairs, if you have added other parameters you may find that the final output of probe pairs is less than the limit you've specified.*
 
-    In the case of a big data set, it may be helpful to specify where you want the outputs. Specify the path you want to use with *-o* followed by the full path to where you want the output.
-
     Due to how the program is currently written, the blast feature may be time/resource prohibitive when used with large batch files. Use with care.
 
     *Input*
     ```
     $ cd /location/of/the/downloaded/scripts
 
-    $ python .\batch.py -amp b1,b2 -batch ./test.fa -min 20 -max 36 -o /path/to/where/you/want/results
+    $ python ./HCR.py -amp b1,b2 -in ./test.fa -min 20 -max 36 -min 10 -polyAT 4 -polyGC 3 -GC 20-65
     ```
   + ### Using BLASTn to flag potentially promiscuous probe pairs
-    Though HCR with split initiators is less likely to generate background fluorescence, you may want to check for the potential of off-target binding during the probe design process. We have built in blastn functionality that flags probe pairs that have high coverage of multiple sequences within a fasta file. This function does not remove the sequences, it simply highlights them so that the user can investigate further and choose to remove if they want. Sequences are only flagged if both halves of the probe pair match a target sequence. Perfect alignment of a single half, will not result in flagging as it should not result in background fluorescence.
+    Though HCR with split initiators is less likely to generate background fluorescence, you may want to check for the potential of off-target binding during the probe design process. We have built in blastn functionality that flags probe pairs that have high coverage of multiple sequences within a fasta file. This function does not remove the sequences, it simply highlights them so that the user can investigate further and choose to remove if they want. Sequences are only flagged if both halves of the probe pair match a target sequence. Perfect alignment of a single half, will not result in flagging as it should not result in background fluorescence. If a probe pair matches a sequence perfectly across the full length of the pair, and the match belongs to a sequence with a different identifier to the input sequence, a flag "! -->" is applied to the probe pair number. It may be that this is a duplicate sequence, an isoform, a paralog, or something else. We leave this to you to intuit whether or not to keep this sequence in the probe submission.
 
-    The "-b" flag followed by a path to a transcriptome file will initiate a blast search.
+    The "-blast" flag followed by a path to a transcriptome file will initiate a blast search.
 
     *Input*
     ```
     $ cd /location/of/the/downloaded/scripts
-    $ python ./makeprobes.py -b ./path/to/reference/transcriptome.fa -name YourFavGene -amp B1 -seq AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
+    $ python ./HCR.py -blast ./path/to/reference/transcriptome.fa -in ./YourFavGene.fasta -amp B1 
     ```
     *Output*
     ```
     $ Amplifier Chosen: B1
-    $ Name Chosen: YourFavGene
-    $ Transcriptome reference is: transcriptome.fa
-    $ The sequence given for probe production is: AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA
+    $ Transcriptome reference: transcriptome.fa, located in the directory ./path/to/reference
+    $ 
     
-    $ It looks like we found some probes. Check here .\ProbemakerOut\TXT\B1_YourFavGene_1_Delay0.txt to see the results.
-    $ You can find an IDT opool submission form located here .\ProbemakerOut\OPOOL\B1_YourFavGene_1_Delay0oPool.xlsx.
-    $ And you can find a bulk primer order here: .\ProbemakerOut\OLIGO\B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
+    $ It looks like we found some probes. Check here ./ProbemakerOut/REPORTS/B1_YourFavGene_1_Delay0.txt to see the results.
+    $ You can find an IDT opool submission form located here ./ProbemakerOut/OPOOL/B1_YourFavGene_1_Delay0oPool.xlsx.
+    $ And you can find a bulk primer order here: ./ProbemakerOut/OLIGO/B1_YourFavGene_1_Delay0oligo.xlsx, this is a rare type of submission for generating a lifetime supply.
     ```
++ ### Using ampswap to replace the amplifier initiator on one probe oligo pool with another.
+    In the course of your experimentation you may wish to remake an oligo pool with a different initiator. To ensure you are maintaining all of the hybridization sequences constant without needing to perfectly recreate the original's inputs, running ampswap.py takes an input opool.xlsx, the current amplifier, and the new desired initiator, and then outputs the order forms required for your order.
 
-## How to use the software in a custom Python script
-  We have also created a Python library that can be used in your already existing pipelines. 
-  
-  #### hcr(amplifier, name, sequence, *kwargs)
-
-  + "name", "amplifier", and "sequence" are required inputs  
-  + "pause"   - tells the program to wait X number of 5' bases before creating probes
-  + "polyAT"  - sets the upper threshold of homopolymeric runs for A and T
-  + "polyCG"  - as above but for C and G
-  + "numbr"   - limits the number of probe pairs produced, defaults to max possible. 36 probe pairs is the most a single opool can take before charging a per base surcharge.
-  + "cgupper" - The upper limit of CG% for a probe pair
-  + "cglower" - The lower limit of CG% for a probe pair
-  + "txptome" - The file name of your reference transcriptome
-  + "tpath"   - The path to where the transcriptome is on your drive
+  *Input*
   ```
-  import os
-  os.chdir("/path/to/hcr/probe/maker/software")
-  
-  import hcr
-
-  # Variables are created containing the required values \ 
-    as strings and/or lists of strings.
-
-  seq = "AAATTTCCGGGGCCCAGAGACGATGAGACCCGTTGCGATATGTTATGGCCGACCACA"
-  amp = ["B1","S10"]
-  name = "YFG"
-
-  # This calls the function from the HCR Probe Maker module
-
-  hcr.hcr(amp,name,seq)
+  $ cd /location/of/the/downloaded/scripts
+  $ python ./ampswap.py -in ./B1_yourfavgene_36_Delay0opool.xlsx -old B1 -new B2,B3,B4
+  ```
+  *Output*
+  ```
+  $ Your new oligos and opool can be found in this directory: /location/of/the/downloaded/scripts/HCRProbeMakerCL/v2_0/ProbemakerOut/OPOOL/AmplifierSwap
   ```
 
 ## Citation
