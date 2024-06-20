@@ -404,8 +404,8 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                         count = len(list(seqs))
                         
                         
-                        print("count",count)
-                        print(seqs)
+                        #print("count",count)
+                        #print(seqs)
                         #print("seqs1")
                         a=0
                         b=0
@@ -435,7 +435,7 @@ def blastnprobes(name,newlist,fullseq,db2,maxprobe,numbr,cdna,MEDIA_FASTA,BLAST_
                         blst = pd.DataFrame(blastresult)
                         blst = blst.rename(columns={'f0':cols[0],'f1':cols[1],'f2':cols[2],'f3':cols[3],'f4':cols[4],'f5':cols[5],'f6':cols[6],'f7':cols[7],'f8':cols[8],'f9':cols[9],'f10':cols[10],'f11':cols[11],'f12':cols[12],'f13':cols[13],'f14':cols[14],'f15':cols[15]})
                         blst = pd.DataFrame.to_dict(blst)
-                        print("endblastnprobes")
+                        #print("endblastnprobes")
                         return [uniquesbad,uniques,fltrblastbad,fltrblastok,str(count-1),seqs1,g,blst]
                     else:
                         print("WARNING: No BLAST hits were found.")
